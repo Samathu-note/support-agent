@@ -1,10 +1,8 @@
 # AI Support Agent (SpotifyCares demo)
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Online-success?style=for-the-badge&logo=render&logoColor=white)](https://support-agent.onrender.com)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Samathu-note/support-agent)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Samathu-note/support-agent)
 
-> 🚀 **Live Demo**: [https://support-agent.onrender.com](https://support-agent.onrender.com)  
-> 📦 **GitHub Repository**: [https://github.com/Samathu-note/support-agent](https://github.com/Samathu-note/support-agent)
+> 🚀 **Live Demo**: [https://github.com/Samathu-note/support-agent](https://github.com/Samathu-note/support-agent)
 
 An AI customer-support agent built on Django + MySQL that: classifies intent,
 drafts a grounded reply from historically similar resolved threads, and
