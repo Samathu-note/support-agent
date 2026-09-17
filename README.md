@@ -1,4 +1,4 @@
-# Hiver SDE Intern Assignment — AI Support Agent (SpotifyCares demo)
+# AI Support Agent (SpotifyCares demo)
 
 An AI customer-support agent built on Django + MySQL that: classifies intent,
 drafts a grounded reply from historically similar resolved threads, and
@@ -12,7 +12,7 @@ the real Kaggle CSV to get real results (see "Using the real dataset" below).
 ## Reproduce in under 15 minutes
 
 ```bash
-git clone <this repo> && cd hiver-agent
+git clone <this repo> && cd support-agent
 pip install -r requirements.txt
 python manage.py migrate                 # sqlite by default, no setup needed
 python manage.py seed_intents

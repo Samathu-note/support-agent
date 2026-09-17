@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: hiver-agent
+    name: support-agent
     env: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn config.wsgi:application"
