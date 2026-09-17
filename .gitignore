@@ -1,0 +1,37 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Django & static
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+media/
+*.log
+
+# Sensitive environment variables
+.env
+.env.local
+
+# ML artifacts & eval output
+*.pkl
+eval_report.json
+
+# IDEs & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

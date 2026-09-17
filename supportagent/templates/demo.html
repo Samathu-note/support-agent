@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Support Agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0b0f19;
+      --bg-secondary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.85);
+      --bg-input: #0a0e17;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: #38bdf8;
+
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+
+      --primary: #38bdf8;
+      --primary-hover: #0ea5e9;
+      --primary-glow: rgba(56, 189, 248, 0.25);
+
+      --escalate-bg: rgba(239, 68, 68, 0.12);
+      --escalate-border: #ef4444;
+      --escalate-text: #fca5a5;
+
+      --auto-bg: rgba(16, 185, 129, 0.12);
+      --auto-border: #10b981;
+      --auto-text: #6ee7b7;
+
+      --brand-color: #1ed760;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      background-image:
+        radial-gradient(at 10% 20%, rgba(56, 189, 248, 0.08) 0px, transparent 50%),
+        radial-gradient(at 90% 80%, rgba(30, 215, 96, 0.06) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 30px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #38bdf8, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(30, 215, 96, 0.12);
+      border: 1px solid rgba(30, 215, 96, 0.3);
+      color: #86efac;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .brand-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--brand-color);
+      box-shadow: 0 0 8px var(--brand-color);
+    }
+
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Scenario Quick Chips */
+    .scenarios-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .scenario-chip {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 7px 13px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+
+    .scenario-chip:hover {
+      background: rgba(56, 189, 248, 0.1);
+      border-color: rgba(56, 189, 248, 0.4);
+      color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    .scenario-chip.escalate-chip:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    /* Input area */
+    .input-wrapper {
+      position: relative;
+    }
+
+    textarea {
+      width: 100%;
+      height: 110px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      resize: vertical;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    .helper-text {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: #0b0f19;
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 10px 24px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px var(--primary-glow);
+      transition: all 0.2s;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px var(--primary-glow);
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Loading state */
+    .loading-state {
+      display: none;
+      padding: 30px;
+      text-align: center;
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      margin-bottom: 24px;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid rgba(56, 189, 248, 0.2);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Results */
+    #results-wrapper {
+      transition: all 0.3s ease;
+    }
+
+    .result-container {
+      border-radius: 14px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result-container.escalate {
+      border-color: var(--escalate-border);
+      background: linear-gradient(180deg, var(--escalate-bg) 0%, rgba(17, 24, 39, 0.9) 100%);
+    }
+
+    .result-container.auto {
+      border-color: var(--auto-border);
+      background: linear-gradient(180deg, var(--auto-bg) 0%, rgba(17, 24, 39, 0.9) 100%);
+    }
+
+    .decision-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .status-badge.escalate {
+      background: #ef4444;
+      color: white;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+    }
+
+    .status-badge.auto {
+      background: #10b981;
+      color: #0b0f19;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    }
+
+    .reason-text {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .meta-box {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .meta-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .meta-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .confidence-meter {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .confidence-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--primary);
+      transition: width 0.4s ease;
+    }
+
+    .reply-card {
+      background: #0a0e17;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+
+    .reply-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .reply-content {
+      font-size: 0.98rem;
+      line-height: 1.6;
+      color: #e2e8f0;
+      font-style: italic;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+    }
+
+    .grounding-box {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .grounding-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .grounding-item {
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .sim-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--primary);
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    .error-banner {
+      background: var(--escalate-bg);
+      border: 1px solid var(--escalate-border);
+      color: var(--escalate-text);
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-left">
+        <div class="logo-icon">🤖</div>
+        <div>
+          <h1>Support Agent</h1>
+          <div class="subtitle">Grounded Tweet Support & Escalation Engine</div>
+        </div>
+      </div>
+      <div class="brand-badge">
+        <span class="brand-dot"></span>
+        <span>{{ brand }}</span>
+      </div>
+    </header>
+
+    <div id="error-container">
+      {% if error %}
+      <div class="error-banner">
+        <span>⚠️</span>
+        <span>{{ error }}</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <div class="section-title">
+        <span>⚡ Quick Test Scenarios (Click to test)</span>
+      </div>
+      <div class="scenarios-grid">
+        <button type="button" class="scenario-chip"
+          onclick="fillScenario('I cannot log into my Spotify account, password reset link is broken')">
+          🔑 Password Reset
+        </button>
+        <button type="button" class="scenario-chip"
+          onclick="fillScenario('The Spotify desktop app keeps crashing every time I open a podcast')">
+          ⚡ App Crash Bug
+        </button>
+        <button type="button" class="scenario-chip"
+          onclick="fillScenario('Can you please add a way to sort playlists by date added?')">
+          💡 Playlist Feature Request
+        </button>
+        <button type="button" class="scenario-chip"
+          onclick="fillScenario('How do I cancel my premium subscription before trial ends?')">
+          🛑 Cancel Subscription
+        </button>
+        <button type="button" class="scenario-chip escalate-chip"
+          onclick="fillScenario('This is unacceptable! You charged me $120 twice and no refund, I am contacting my lawyer!')">
+          🚨 $120 Double Charge + Legal (Escalate)
+        </button>
+        <button type="button" class="scenario-chip escalate-chip"
+          onclick="fillScenario('Worst service ever, disgusting scam, I want my money back immediately!')">
+          😡 Angry Negative Tone (Escalate)
+        </button>
+      </div>
+
+      <form id="support-form" method="post" action="/">
+        {% csrf_token %}
+        <input type="hidden" id="brand-input" name="brand" value="{{ brand }}">
+        <div class="section-title">
+          <span>💬 Customer Message</span>
+        </div>
+        <div class="input-wrapper">
+          <textarea id="message-input" name="text"
+            placeholder="Type a customer support query or click one of the scenarios above...">{% if result %}{{ result.text }}{% endif %}</textarea>
+        </div>
+        <div class="btn-row">
+          <span class="helper-text">Powered by TF-IDF Retrieval + Intent Classifier + LLM Drafting</span>
+          <button type="submit" id="submit-btn" class="submit-btn">
+            <span>Analyze & Reply</span>
+            <span>➔</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading-box" class="loading-state">
+      <div class="spinner"></div>
+      <div style="font-weight: 600; color: var(--text-main); margin-bottom: 4px;">Processing Support Query...</div>
+      <div style="font-size: 0.85rem; color: var(--text-muted);">Classifying intent &bull; Retrieving historical threads
+        &bull; Grounding LLM</div>
+    </div>
+
+    <!-- Result Box -->
+    <div id="results-wrapper">
+      {% if result %}
+      <div class="result-container {% if result.escalate %}escalate{% else %}auto{% endif %}">
+        <div class="decision-banner">
+          <div>
+            {% if result.escalate %}
+            <span class="status-badge escalate">🚨 Escalate to Human</span>
+            {% else %}
+            <span class="status-badge auto">✅ Auto-Handle</span>
+            {% endif %}
+          </div>
+          <div class="reason-text">{{ result.reason }}</div>
+        </div>
+
+        <div class="meta-grid">
+          <div class="meta-box">
+            <div class="meta-label">Predicted Intent</div>
+            <div class="meta-value">
+              <span style="color: var(--primary);">{{ result.intent }}</span>
+            </div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-label">Classifier Confidence</div>
+            <div class="meta-value">
+              <span>{{ result.confidence }}</span>
+            </div>
+            <div class="confidence-meter">
+              <div class="confidence-fill" data-confidence="{% widthratio result.confidence 1 100 %}"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reply-card">
+          <div class="reply-header">
+            <span class="meta-label" style="color: var(--primary);">Drafted Reply (Grounded)</span>
+            <button class="copy-btn" onclick="copyReply(this)">Copy</button>
+          </div>
+          <div class="reply-content" id="drafted-reply-text">"{{ result.reply }}"</div>
+        </div>
+
+        <div class="grounding-box">
+          <div class="meta-label">Historical Evidence Threads (Top Matches)</div>
+          <ul class="grounding-list">
+            {% for g in result.grounding %}
+            <li class="grounding-item">
+              <div class="sim-tag">Cosine Similarity: {{ g.similarity|floatformat:3 }}</div>
+              <div style="color: var(--text-muted);"><strong>Customer:</strong> "{{ g.thread.customer_text }}"</div>
+              <div style="color: #cbd5e1; margin-top: 3px;"><strong>{{ brand }}:</strong> "{{ g.thread.company_text }}"
+              </div>
+            </li>
+            {% empty %}
+            <li style="color: var(--text-dim); font-size: 0.85rem;">No historical matching threads found.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.confidence-fill[data-confidence]').forEach(el => {
+      el.style.width = el.getAttribute('data-confidence') + '%';
+    });
+
+    function fillScenario(text) {
+      const textarea = document.getElementById('message-input');
+      textarea.value = text;
+      textarea.focus();
+      submitQuery();
+    }
+
+    function copyReply(btn) {
+      const text = document.getElementById('drafted-reply-text').innerText.replace(/^"|"$/g, '');
+      navigator.clipboard.writeText(text).then(() => {
+        btn.innerText = 'Copied!';
+        setTimeout(() => { btn.innerText = 'Copy'; }, 2000);
+      });
+    }
+
+    const form = document.getElementById('support-form');
+    const loadingBox = document.getElementById('loading-box');
+    const resultsWrapper = document.getElementById('results-wrapper');
+    const errorContainer = document.getElementById('error-container');
+    const submitBtn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      submitQuery();
+    });
+
+    function submitQuery() {
+      const text = document.getElementById('message-input').value.trim();
+      const brand = document.getElementById('brand-input').value;
+      const csrfEl = document.querySelector('[name=csrfmiddlewaretoken]');
+      const csrfToken = csrfEl ? csrfEl.value : '';
+
+      if (!text) {
+        errorContainer.innerHTML = `
+          <div class="error-banner">
+            <span>⚠️</span>
+            <span>Please enter a customer message before submitting.</span>
+          </div>
+        `;
+        return;
+      }
+
+      errorContainer.innerHTML = '';
+      loadingBox.style.display = 'block';
+      resultsWrapper.style.opacity = '0.3';
+      submitBtn.disabled = true;
+
+      fetch('/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ text: text, brand: brand })
+      })
+        .then(res => {
+          if (!res.ok) {
+            return res.json().then(err => { throw new Error(err.error || 'Request failed'); });
+          }
+          return res.json();
+        })
+        .then(data => {
+          renderResult(data.result, brand);
+        })
+        .catch(err => {
+          errorContainer.innerHTML = `
+          <div class="error-banner">
+            <span>⚠️</span>
+            <span>${err.message || 'Error processing request.'}</span>
+          </div>
+        `;
+        })
+        .finally(() => {
+          loadingBox.style.display = 'none';
+          resultsWrapper.style.opacity = '1';
+          submitBtn.disabled = false;
+        });
+    }
+
+    function renderResult(res, brand) {
+      const isEscalate = res.escalate;
+      const statusClass = isEscalate ? 'escalate' : 'auto';
+      const statusBadge = isEscalate
+        ? '<span class="status-badge escalate">🚨 Escalate to Human</span>'
+        : '<span class="status-badge auto">✅ Auto-Handle</span>';
+
+      const groundingItems = (res.grounding && res.grounding.length > 0)
+        ? res.grounding.map(g => `
+          <li class="grounding-item">
+            <div class="sim-tag">Cosine Similarity: ${Number(g.similarity).toFixed(3)}</div>
+            <div style="color: var(--text-muted);"><strong>Customer:</strong> "${escapeHtml(g.thread.customer_text)}"</div>
+            <div style="color: #cbd5e1; margin-top: 3px;"><strong>${brand}:</strong> "${escapeHtml(g.thread.company_text)}"</div>
+          </li>
+        `).join('')
+        : '<li style="color: var(--text-dim); font-size: 0.85rem;">No historical matching threads found.</li>';
+
+      const confPercent = Math.min(100, Math.round(res.confidence * 100));
+
+      resultsWrapper.innerHTML = `
+        <div class="result-container ${statusClass}">
+          <div class="decision-banner">
+            <div>${statusBadge}</div>
+            <div class="reason-text">${escapeHtml(res.reason)}</div>
+          </div>
+
+          <div class="meta-grid">
+            <div class="meta-box">
+              <div class="meta-label">Predicted Intent</div>
+              <div class="meta-value">
+                <span style="color: var(--primary);">${escapeHtml(res.intent)}</span>
+              </div>
+            </div>
+            <div class="meta-box">
+              <div class="meta-label">Classifier Confidence</div>
+              <div class="meta-value">
+                <span>${res.confidence}</span>
+              </div>
+              <div class="confidence-meter">
+                <div class="confidence-fill" style="width: ${confPercent}%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reply-card">
+            <div class="reply-header">
+              <span class="meta-label" style="color: var(--primary);">Drafted Reply (Grounded)</span>
+              <button class="copy-btn" onclick="copyReply(this)">Copy</button>
+            </div>
+            <div class="reply-content" id="drafted-reply-text">"${escapeHtml(res.reply)}"</div>
+          </div>
+
+          <div class="grounding-box">
+            <div class="meta-label">Historical Evidence Threads (Top Matches)</div>
+            <ul class="grounding-list">
+              ${groundingItems}
+            </ul>
+          </div>
+        </div>
+      `;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+
+</html>

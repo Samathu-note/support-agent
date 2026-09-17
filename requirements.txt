@@ -1,0 +1,8 @@
+Django>=5.0,<6.2
+pandas
+scikit-learn
+numpy
+PyMySQL
+openai
+gunicorn
+whitenoise
